@@ -18,12 +18,12 @@ class Server
 	def run
 		#puts "you are in run"
 
-		puts "server started ready to accept client connections"
+		puts "\t\tserver started ready to accept client connections"
 
 		loop { 
 
 				Thread.start(@server.accept) do |client|
-					client.puts "Enter Username"
+					client.puts "\tEnter Username"
 					username = client.gets.chomp
 					@connections[:client].each do |other_name, other_client|
 						if username == other_name || client == other_client
@@ -33,9 +33,9 @@ class Server
 						end
 					end
 					@connections[:client][username] = client 
-					puts "#{username} connected at #{Time.now}"
-					client.puts	 "welcome #{username} you are ready to chat"
-					client.puts  "type 'exit' to leave "
+					puts "\t\t#{username} connected at #{Time.now}"
+					client.puts	 "\t\ welcome #{username} you are ready to chat"
+					client.puts  "\t\t type 'exit' to leave "
 					available_user(client)
 
 					broadcast_to_all(username,client)
@@ -48,7 +48,7 @@ class Server
 		
 			client.puts "Users available"
 			@connections[:client].each do |other_name, other_client|
-			client.puts "#{other_name}"  						
+			client.puts "\t#{other_name}"  						
 		end
 	end
 
@@ -69,8 +69,8 @@ class Server
       	@connections[:client].each do |other_name, other_client|
         
 	        unless other_name == username || client == other_client 
-	 	         puts "#{username.to_s}: #{msg}"	
-	    	     other_client.puts "#{username.to_s}: #{msg}"
+	 	         puts "\t#{username.to_s}: #{msg}"	
+	    	     other_client.puts "\t#{username.to_s}: #{msg}"
 	        end
 	    	
     	end

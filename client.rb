@@ -1,13 +1,13 @@
 require "socket"
 
-class client
+class Client
 	def initialize(server)
 		@server = server
 		send
 		listen
-		@request = nil
-		@response = nil	
-		
+		@request
+		@response 	
+
 		@request.join
 		@response.join
 	end
@@ -16,7 +16,7 @@ class client
 		@request = Thread.new  do
 			loop { 
 
-					msg = gets.chomp
+					msg = $stdin.gets.chomp
 					@server.puts( msg )
 			 }
 		end
@@ -34,4 +34,4 @@ end
 
 
 server = TCPSocket.open ARGV[0], ARGV[1]
-client.new( server )
+Client.new( server )
