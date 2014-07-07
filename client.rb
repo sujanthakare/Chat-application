@@ -5,8 +5,9 @@ class client
 		@server = server
 		send
 		listen
-		@request
-		@response
+		@request = nil
+		@response = nil	
+		
 		@request.join
 		@response.join
 	end
@@ -24,10 +25,8 @@ class client
 	def listen
 		@response = Thread.new do
 			loop { 
-
 					msg  = @server.gets.chomp
 					puts "#{msg}"
-	
 			 }	
 		end
 	end

@@ -16,10 +16,12 @@ class Server
 	end
 
 	def run
-		puts "you are in run"
-		puts "server ready to accept client connections"
+		#puts "you are in run"
+
+		puts "server started ready to accept client connections"
 
 		loop { 
+
 				Thread.start(@server.accept) do |client|
 					client.puts "Enter Username"
 					username = client.gets.chomp
@@ -31,6 +33,7 @@ class Server
 						end
 					end
 					@connections[:client][username] = client 
+					puts "#{username} connected at #{Time.now}"
 					client.puts	 "welcome #{username} you are ready to chat"
 					client.puts  "type 'exit' to leave "
 					available_user(client)
@@ -53,25 +56,23 @@ class Server
 	def broadcast_to_all(username,client)
 
 	
-		puts "you are in broadcast_to_all method"
+		#puts "you are in broadcast_to_all method"
 
 		loop {
 
-
-		msg = client.gets.chomp
-		if msg.to_s == "exit"
-		@connections[:client] = @connections.delete(client)
-			client.close
-			break
-		end
-      
+				msg = client.gets.chomp
+				if msg.to_s == "exit"
+					client.close
+					break
+				end
+		      
       	@connections[:client].each do |other_name, other_client|
         
-        unless other_name == username  
-          puts "#{username.to_s}: #{msg}"	
-          other_client.puts "#{username.to_s}: #{msg}"
-        end
-    	
+	        unless other_name == username || client == other_client 
+	 	         puts "#{username.to_s}: #{msg}"	
+	    	     other_client.puts "#{username.to_s}: #{msg}"
+	        end
+	    	
     	end
 	}
 			
