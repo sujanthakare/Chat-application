@@ -5,12 +5,6 @@ class Server
 		@server = TCPServer.open(ip,port)
 
 		@connections = Hash.new
-		@name = Hash.new
-		@clients = Hash.new
-
-
-		@connections[:name] = @name
-		@connections[:client] = @clients
 
 		run
 	end
@@ -25,14 +19,14 @@ class Server
 				Thread.start(@server.accept) do |client|
 					client.puts "\tEnter Username"
 					username = client.gets.chomp
-					@connections[:client].each do |other_name, other_client|
+					@connections.each do |other_name, other_client|
 						if username == other_name || client == other_client
 							client.puts "username already exists"
 							client.puts "try connecting again with another username"
 							client.close		
 						end
 					end
-					@connections[:client][username] = client 
+					@connections[username] = client 
 					puts "\t\t#{username} connected at #{Time.now}"
 					client.puts	 "\t\ welcome #{username} you are ready to chat"
 					client.puts  "\t\t type 'exit' to leave "
@@ -47,7 +41,7 @@ class Server
 	def available_user(client)
 		
 			client.puts "Users available"
-			@connections[:client].each do |other_name, other_client|
+			@connections.each do |other_name, other_client|
 			client.puts "\t#{other_name}"  						
 		end
 	end
@@ -63,10 +57,11 @@ class Server
 				msg = client.gets.chomp
 				if msg.to_s == "exit"
 					client.close
+					puts "#{username} leaved at #{Time.now}"
 					break
 				end
 		      
-      	@connections[:client].each do |other_name, other_client|
+      	@connections.each do |other_name, other_client|
         
 	        unless other_name == username || client == other_client 
 	 	         puts "\t#{username.to_s}: #{msg}"	
